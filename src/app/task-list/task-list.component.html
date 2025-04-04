@@ -1,15 +1,24 @@
 <!-- task-list.component.html -->
+<app-task>
 <div>
     <button (click)="changeFilter('All')">All</button>
     <button (click)="changeFilter('Completed')">Completed</button>
     <button (click)="changeFilter('Pending')">Pending</button>
 
     <ul>
-        @for (task of tasks; track $index) {
+        @for (task of tasks(); track $index) {
             <li>
-              {{ task.title }} - {{ task.completed ? 'Completed' : 'Pending' }}
+              {{ task.title }} - {{ task.completed ? 'Completed' : 'Pending' }} - {{ task.priority}}
+              <button (click)="editTask(task.title)">Edit</button>
+              <button (click)="completeTask()">Complete</button>
             </li>
+        }
+
+        @if (isEditing) {
+          <input [(ngModel)]="editedTitle" type="text" placeholder="Edit task title">
+          <button (click)="submitEdit()">Submit</button>
         }
     </ul>
   </div>
+</app-task>
   

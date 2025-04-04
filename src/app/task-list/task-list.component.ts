@@ -1,34 +1,65 @@
 // task-list.component.ts
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TaskComponent } from "../task/task.component";
+import { TaskService } from '../shared/services/services/task.service';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  imports: [TaskComponent]
+  // imports: [TaskComponent, FormsModule],
+  standalone: false
 })
 export class TaskListComponent {
-  tasks = [
-    { title: 'Task 1', completed: false },
-    { title: 'Task 2', completed: true },
-    { title: 'Task 3', completed: false },
-  ];
 
+  taskService = inject(TaskService)
+  tasks = this.taskService.tasks;
+  isEditing = false;
+  editedTitle = signal('');
+  selectedTaskTitle = '';
   
-  filter = 'All';
+  filterStatus = signal('All');
 
   get filteredTasks() {
-    if (this.filter === 'Completed') {
-      return this.tasks.filter(task => task.completed);
+    if (this.filterStatus() === 'Completed') {
+      return this.tasks().filter(task => task.completed);
     }
-    if (this.filter === 'Pending') {
-      return this.tasks.filter(task => !task.completed);
+    if (this.filterStatus() === 'Pending') {
+      return this.tasks().filter(task => !task.completed);
     }
-    return this.tasks;
+    return this.tasks();
   }
 
   changeFilter(status: string) {
-    status = this.filter;
+    status = this.filterStatus();
+  }
+
+
+  editTask (title: string) {
+  // Logic to edit a task title
+  this.isEditing = true;
+  this.selectedTaskTitle = title;
+
+  }
+
+
+  submitEdit () {
+    this.taskService.editTask(this.editedTitle(), this.selectedTaskTitle);
+    
+    this.editedTitle.set('');
+
+    this.isEditing = false;
+  }
+
+
+
+
+
+
+
+  completeTask () {
+  // Logic to mark a task as completed
   }
 }

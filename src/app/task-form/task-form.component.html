@@ -1,1 +1,12 @@
+<!-- creae a template for an add task form-->
 
+<div>
+    <input [(ngModel)]="newTaskTitle" type="text" placeholder="Enter new task" >
+    <select [(ngModel)]="taskPriority">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+    </select>
+    <p>{{ taskPriority() }}</p>
+    <button (click)="addTaskHandler(newTaskTitle(), taskPriority())">Add Task</button>
+</div>
